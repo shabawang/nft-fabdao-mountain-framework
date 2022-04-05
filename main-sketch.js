@@ -8,20 +8,40 @@ function setup () {
 
     // random mountain nums
     let mountains = [];
+    let mountainCounter = 0;
 
-    let mountainNum = floor(3 + fxrand() * 10);
-    let specialIndex = floor(fxrand() * mountainNum);
+    let upMountains = floor(fxRandomRange(3, 6));
+    let bottomMountains = floor(fxRandomRange(3, 6));
+    let middleMountainIndex = upMountains;
 
+    let totalMountainNum = upMountains + bottomMountains + 1;
 
-    console.log("total mountain: " + mountainNum);
-    console.log("main mountain index: " + specialIndex);
+    console.log("total mountain: " + totalMountainNum);
+    console.log("main mountain index: " + upMountains);
 
     let mainHue = fxrand() * 255;
+    let mainMountainStartY = windowHeight * 0.5 + fxRandomRange(-0.3, 0.3) * windowWidth;
 
-    for(let i=0; i< mountainNum; i++)
+    for(let i=0; i< totalMountainNum; i++)
     {
+        let startY = 0.0;
+        let mountainOffsetUnit = windowWidth * 0.3;
+
         // set start Y
-        let startY = windowHeight/mountainNum * i ;
+        if(i < upMountains)
+        {
+            let offsetValue = i - upMountains;
+            startY = mainMountainStartY + (mountainOffsetUnit * offsetValue) + (fxRandomRange(-0.1, 0.1) * windowWidth);
+        }
+        else if(i == upMountains)
+        {
+            startY = mainMountainStartY;
+        }
+        else
+        {
+            let offsetValue = i - upMountains;
+            startY = mainMountainStartY + mountainOffsetUnit * offsetValue + fxRandomRange(-0.1, 0.1) * windowWidth;
+        }
 
         // random color
         colorMode(HSB, 255);
@@ -32,7 +52,7 @@ function setup () {
         if(currentHue > 255)
             currentHue -= 255;
 
-        if(specialIndex == i)
+        if(i == upMountains)
         {
             currentSat = 0;
             currentBright = 255;
@@ -44,6 +64,11 @@ function setup () {
         mountains[i] = new MountainCurve(colorA, colorB, startY);
         mountains[i].drawMountain();
     }
+}
+
+function fxRandomRange (from, to)
+{
+    return fxrand() * (to - from) + from;
 }
 
 function setupSize () {
@@ -79,8 +104,9 @@ function draw () {
 class MountainCurve {
     constructor(colorA, colorB, startY) {
         this.noiseStart = fxrand() * 10000;
-        this.noiseWidth = 1 + fxrand() * 3;
-        this.mountainHeight = windowWidth * 0.5;
+        this.noiseWidth = floor(fxRandomRange(1, 3));
+        this.mountainHeight = windowWidth * 0.7;
+
         this.end = -1; // no known yet
 
         this.startY = startY;
