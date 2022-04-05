@@ -46,14 +46,33 @@
     let NY_mountainIndex = search.get('mountainIndex');
     let NY_isCollage = search.get('isCollage');
 
+    let NY_isCheYu = false;
+    let NY_isWen = false;
+    let NY_isLien = false;
+    let NY_isJinyao = false;
+    let NY_isOivm = false;
+
     window.onmessage = function(e) {
         let eventName = e.data.event;
         let args = e.data.args;
 
         if(eventName == 'DrawMountainsWithOffset')
         {
-            NY_StartDrawMountain(args.offset);
+            NY_GetArtistCrossStatus();
+            NY_StartDrawMountain(args.offset, NY_isCheYu, NY_isWen, NY_isLien, NY_isJinyao, NY_isOivm);
         }
+    }
+
+    function NY_GetArtistCrossStatus () {
+        // do some query to check if user holding other artists tokens
+
+        // nothing for now
+
+        NY_isCheYu = false;
+        NY_isWen = false;
+        NY_isLien = false;
+        NY_isJinyao = false;
+        NY_isOivm = false;
     }
     </script>
     <!-- if you need to import js scripts do it here -->

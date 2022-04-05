@@ -155,25 +155,29 @@ class MountainCurve {
 // please call this function when you calculated your StartY and EndY
 function NY_MountainReady (mountainStartY, mountainEndY)
 {
-    let message = {
-        'event':'ready',
-        'args':{
-            'mountainIndex':NY_mountainIndex,
-            'startY':mountainStartY,
-            'endY':mountainEndY
-        }
-    };
-
     if(NY_isCollage)
+    {
+        let message = {
+            'event':'ready',
+            'args':{
+                'mountainIndex':NY_mountainIndex,
+                'startY':mountainStartY,
+                'endY':mountainEndY
+            }
+        };
+
         window.top.postMessage(message, '*');
+    }
     else
+    {
         NY_StartDrawMountain(0.0);
+    }
 }
 
 // please use this function to start draw
 // this will be called after the offset value is calulated,
 // or will be called if no offset value needed (when viewing the NFT alone)
-function NY_StartDrawMountain (offset)
+function NY_StartDrawMountain (offset, isCheYu, isWen, isLien, isJinyao, isOivm)
 {
     // you should overwrite this function for you own need,
     // the following code is only for demo purpose
