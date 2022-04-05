@@ -86,11 +86,6 @@ function fxRandomRange (from, to)
     return fxrand() * (to - from) + from;
 }
 
-function setupSize () {
-
-}
-
-
 // function drawMountain (colorA, colorB) {
 //     let noiseStart = fxrand() * 10000;
 //     let noiseWidth = 2 + fxrand() * 6;
@@ -110,35 +105,6 @@ function setupSize () {
 //         line(x, y, x, windowHeight);
 //     }
 // }
-
-function draw () {
-
-}
-
-function NY_MountainReady (mountainStartY, mountainEndY)
-{
-    let message = {
-        'event':'ready',
-        'args':{
-            'mountainIndex':NY_mountainIndex,
-            'startY':mountainStartY,
-            'endY':mountainEndY
-        }
-    };
-
-    window.top.postMessage(message, '*');
-}
-
-function NY_StartDrawMountain (offset)
-{
-    allMountainOffset = offset;
-    drawMountains();
-
-    let startPoint = mountains[mainMountainIndex].calculateY(0);
-    let endPoint = mountains[mainMountainIndex].calculateY(windowWidth);
-}
-
-
 
 class MountainCurve {
     constructor(colorA, colorB, startY) {
@@ -178,4 +144,42 @@ class MountainCurve {
         let noiseValue = this.noiseStart + this.noiseWidth * t;
         return allMountainOffset + this.startY + (noise(noiseValue) - 0.5) * this.mountainHeight;
     }
+}
+
+//////////////////////////////////////////////////////////////
+// PLEASE INCLUDE THIS PART INTO YOUR SKETCH SCRIPT
+// THE
+/////////////////////////////////////////////////////////////
+
+
+// please call this function when you calculated your StartY and EndY
+function NY_MountainReady (mountainStartY, mountainEndY)
+{
+    let message = {
+        'event':'ready',
+        'args':{
+            'mountainIndex':NY_mountainIndex,
+            'startY':mountainStartY,
+            'endY':mountainEndY
+        }
+    };
+
+    if(NY_isCollage)
+        window.top.postMessage(message, '*');
+    else
+        NY_StartDrawMountain(0.0);
+}
+
+// please use this function to start draw
+// this will be called after the offset value is calulated,
+// or will be called if no offset value needed (when viewing the NFT alone)
+function NY_StartDrawMountain (offset)
+{
+    // you should overwrite this function for you own need,
+    // the following code is only for demo purpose
+    allMountainOffset = offset;
+    drawMountains();
+
+    let startPoint = mountains[mainMountainIndex].calculateY(0);
+    let endPoint = mountains[mainMountainIndex].calculateY(windowWidth);
 }

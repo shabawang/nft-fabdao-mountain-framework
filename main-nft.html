@@ -33,8 +33,6 @@
         console.log("fxhash: TRIGGER PREVIEW")
       }
       //---- /do not edit the following code
-
-      let NY_mountainIndex = search.get('mountainIndex');
     </script>
 
     <link rel="stylesheet" href="./src/style.css">
@@ -42,7 +40,12 @@
     <script src="src/jquery-3.6.0.min.js"></script>
     <script src="src/p5.min.js"></script>
     <script src="main-sketch.js"></script>
+
+    <!-- PLEASE INCULUDE THIS PART INTO YOUR NFT HTML -->
     <script type="text/javascript">
+    let NY_mountainIndex = search.get('mountainIndex');
+    let NY_isCollage = search.get('isCollage');
+
     window.onmessage = function(e) {
         let eventName = e.data.event;
         let args = e.data.args;
