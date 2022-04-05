@@ -1,4 +1,8 @@
 
+let allMountainOffset = 0.0;
+let mountains = [];
+let mainMountainIndex = 0;
+
 function setup () {
     createCanvas(windowWidth, windowHeight);
     background(0);
@@ -7,12 +11,11 @@ function setup () {
     noiseSeed(seed);
 
     // random mountain nums
-    let mountains = [];
     let mountainCounter = 0;
 
     let upMountains = floor(fxRandomRange(3, 6));
     let bottomMountains = floor(fxRandomRange(3, 6));
-    let middleMountainIndex = upMountains;
+    mainMountainIndex = upMountains;
 
     let totalMountainNum = upMountains + bottomMountains + 1;
 
@@ -62,6 +65,18 @@ function setup () {
         let colorB = color(currentHue + fxrand() * 10, currentSat, currentBright - 50);
 
         mountains[i] = new MountainCurve(colorA, colorB, startY);
+    }
+
+    // get start point & end point
+    let startMountainY = mountains[mainMountainIndex].calculateY(0);
+    let endMountainY = mountains[mainMountainIndex].calculateY(windowWidth);
+
+    NY_MountainReady(startMountainY, endMountainY);
+}
+
+function drawMountains () {
+    for(let i=0; i< mountains.length; i++)
+    {
         mountains[i].drawMountain();
     }
 }
@@ -100,6 +115,30 @@ function draw () {
 
 }
 
+function NY_MountainReady (mountainStartY, mountainEndY)
+{
+    let message = {
+        'event':'ready',
+        'args':{
+            'mountainIndex':NY_mountainIndex,
+            'startY':mountainStartY,
+            'endY':mountainEndY
+        }
+    };
+
+    window.top.postMessage(message, '*');
+}
+
+function NY_StartDrawMountain (offset)
+{
+    allMountainOffset = offset;
+    drawMountains();
+
+    let startPoint = mountains[mainMountainIndex].calculateY(0);
+    let endPoint = mountains[mainMountainIndex].calculateY(windowWidth);
+}
+
+
 
 class MountainCurve {
     constructor(colorA, colorB, startY) {
@@ -123,6 +162,7 @@ class MountainCurve {
             let t = x/windowWidth;
             let nowNoiseValue = this.noiseStart + this.noiseWidth * t;
             let y = this.startY + (noise(nowNoiseValue) - 0.5) * this.mountainHeight;
+            y += allMountainOffset;
 
             var grad = drawingContext.createLinearGradient(x, 0, x, windowHeight);
             grad.addColorStop(0, this.colorA);
@@ -131,5 +171,11 @@ class MountainCurve {
             drawingContext.strokeStyle = grad;
             line(x, y, x, windowHeight);
         }
+    }
+
+    calculateY (x) {
+        let t = x/windowWidth;
+        let noiseValue = this.noiseStart + this.noiseWidth * t;
+        return allMountainOffset + this.startY + (noise(noiseValue) - 0.5) * this.mountainHeight;
     }
 }

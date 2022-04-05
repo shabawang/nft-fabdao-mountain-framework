@@ -33,6 +33,8 @@
         console.log("fxhash: TRIGGER PREVIEW")
       }
       //---- /do not edit the following code
+
+      let NY_mountainIndex = search.get('mountainIndex');
     </script>
 
     <link rel="stylesheet" href="./src/style.css">
@@ -40,7 +42,17 @@
     <script src="src/jquery-3.6.0.min.js"></script>
     <script src="src/p5.min.js"></script>
     <script src="main-sketch.js"></script>
+    <script type="text/javascript">
+    window.onmessage = function(e) {
+        let eventName = e.data.event;
+        let args = e.data.args;
 
+        if(eventName == 'DrawMountainsWithOffset')
+        {
+            NY_StartDrawMountain(args.offset);
+        }
+    }
+    </script>
     <!-- if you need to import js scripts do it here -->
   </head>
   <body>
