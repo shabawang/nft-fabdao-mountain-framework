@@ -1,0 +1,18 @@
+body {
+  background-color: white;
+  padding: 0px;
+  margin: 0px;
+  border: 0px;
+
+  /* leave it to hide the scrollbars */
+  overflow: hidden;
+}
+
+main {
+    width: 100%;
+    height: 100%;
+}
+
+canvas {
+    display: block;
+}

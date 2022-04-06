@@ -1,0 +1,16 @@
+export default {
+  autoSave: false,
+  stopAfterRender: true,
+  withFrame: false,
+  withStretchLine: true,
+  withSnow: true,
+  pixelated: true,
+  mountainShade: true,
+  fogStrength: 1,
+  threshold: 0.6,
+  bgColor: [172.5, 164.5, 158],
+  fogColor: [255, 255, 255],
+  colorTheme: "Blue",
+  fov: 120,
+  mountainHeight: 3,
+};
