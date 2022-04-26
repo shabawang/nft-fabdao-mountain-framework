@@ -79,6 +79,8 @@ function drawMountains () {
     {
         mountains[i].drawMountain();
     }
+
+    NY_FinishDrawMountain();
 }
 
 function fxRandomRange (from, to)
@@ -186,4 +188,22 @@ function NY_StartDrawMountain (offset, isCheYu, isWen, isLien, isJinyao, isOivm)
 
     let startPoint = mountains[mainMountainIndex].calculateY(0);
     let endPoint = mountains[mainMountainIndex].calculateY(windowWidth);
+}
+
+function NY_FinishDrawMountain () {
+    if(NY_isCollage)
+    {
+        let message = {
+            'event':'draw_finish',
+            'args':{
+                'mountainIndex':NY_mountainIndex
+            }
+        };
+
+        window.top.postMessage(message, '*');
+    }
+    else
+    {
+        // does nothing
+    }
 }
