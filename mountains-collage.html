@@ -56,14 +56,17 @@
     let mountainIframes = [];
     let mountainStatus = [];
 
+    let collabFeatures = {};
+
     $(window).on('load', function(){
         startSequence();
     });
 
     async function startSequence () {
         await createMountainIframes();
-        await loadMountainIframes();
+        await loadMountainIframes(); // setup src links and get StartY, EndY Data
 
+        // wait till all mountain frame data ready
         while(true)
         {
             let isAllMountainReady = checkAllMountainReady();
@@ -74,7 +77,8 @@
                 await sleep(100);
         }
 
-        processMountainOffsets();
+        processCollabFeatures();
+        processMountainOffsets(); // calculate offsets
         await drawMountainsOneByOne ();
     }
 
@@ -141,11 +145,10 @@
 
         let middleY = (maxY + minY) * 0.5;
         let windowOffset = window.innerHeight * 0.5 - middleY;
-        console.log("window things");
-        console.log(middleY);
-        console.log(window.innerHeight);
-        console.log(windowOffset);
-
+        // console.log("window things");
+        // console.log(middleY);
+        // console.log(window.innerHeight);
+        // console.log(windowOffset);
 
         // draw all mountains
         for(let i=0; i< mountainStatus.length; i++)
@@ -187,9 +190,6 @@
     }
 
     function processMountainOffsets () {
-
-        console.log(mountainStatus);
-
         // make mountains connect
         let offsetSum = 0.0;
         for(let i=1; i< mountainStatus.length; i++)
@@ -199,8 +199,39 @@
 
             mountainStatus[i].alignOffset = offsetSum;
         }
+    }
 
-        console.log(mountainStatus);
+    function processCollabFeatures () {
+        if(Math.random() > 0.5)
+            collabFeatures.borderWidth = Math.random() * 40 + 10;
+        else
+            collabFeatures.borderWidth = 0.0;
+
+        collabFeatures.CheYu = randomDataArray();
+        collabFeatures.Wen = randomDataArray();
+        collabFeatures.Lien = randomDataArray();
+        collabFeatures.Jinyao = randomDataArray();
+        collabFeatures.Oivm = randomDataArray();
+
+        console.log('Collab Data Inputs:');
+        console.log(collabFeatures);
+    }
+
+    function randomDataArray () {
+        let data = [];
+
+        // empty
+        if(Math.random() < 0.5)
+            return data;
+
+        let count = Math.floor(Math.random() * 3) + 1;
+
+        for(let i=0; i< count; i++)
+        {
+            data[i] = Math.random() * 1.0;
+        }
+
+        return data;
     }
 
     function startDrawWithOffset (mountainIndex, offsetValue)
@@ -209,7 +240,7 @@
 
         let message = {
             'event':'DrawMountainsWithOffset',
-            'args': {'offset':offsetValue}
+            'args': {'offset':offsetValue, 'collabData': collabFeatures}
         };
         iframeObj.contentWindow.postMessage(message, '*');
     }

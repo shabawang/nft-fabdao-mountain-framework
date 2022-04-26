@@ -179,11 +179,21 @@ function NY_MountainReady (mountainStartY, mountainEndY)
 // please use this function to start draw
 // this will be called after the offset value is calulated,
 // or will be called if no offset value needed (when viewing the NFT alone)
-function NY_StartDrawMountain (offset, isCheYu, isWen, isLien, isJinyao, isOivm)
+function NY_StartDrawMountain (offset, borderWidth, CheYu, Wen, Lien, Jinyao, Oivm)
 {
     // you should overwrite this function for you own need,
     // the following code is only for demo purpose
     allMountainOffset = offset;
+
+    // collab features
+    console.log(borderWidth);
+    console.log(CheYu);
+    console.log(Wen);
+    console.log(Lien);
+    console.log(Jinyao);
+    console.log(Oivm);
+
+
     drawMountains();
 
     let startPoint = mountains[mainMountainIndex].calculateY(0);
