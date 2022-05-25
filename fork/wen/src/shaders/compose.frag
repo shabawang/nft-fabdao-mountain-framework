@@ -10,8 +10,11 @@ uniform sampler2D uMap;
 uniform sampler2D uHighlightMap;
 uniform sampler2D uLookupMap;
 uniform sampler2D uHexMap;
+uniform sampler2D uDecorationMap;
+
 uniform float uStretchLine;
 uniform float uRatio;
+uniform float uSeedStretch;
 uniform float uSeedPixelated;
 uniform float uPixelated;
 uniform float uHighlightStrength;
@@ -57,8 +60,8 @@ vec4 lookup(in vec4 textureColor, in sampler2D lookupTable) {
 
 #pragma glslify: snoise    = require(./glsl-utils/snoise.glsl)
 
-#define LEVEL_PIXELATE 4
-#define LEVEL_DETAIL 0.5
+#define LEVEL_PIXELATE 5
+#define LEVEL_DETAIL 0.25
 
 vec3 pixelate(vec2 p, sampler2D texture) {
     vec3 color = vec3(0.5);
@@ -80,10 +83,22 @@ vec3 pixelate(vec2 p, sampler2D texture) {
     return color;
 }
 
+vec3 greyscale(vec3 color, float str) {
+    float g = dot(color, vec3(0.299, 0.587, 0.114));
+    return mix(color, vec3(g), str);
+}
+
+vec3 greyscale(vec3 color) {
+    return greyscale(color, 1.0);
+}
+
+
 void main(void) {
     vec2 uv;
     float hex = texture2D(uHexMap, vTextureCoord).r;
     vec4 color = texture2D(uMap, vTextureCoord);
+    vec4 colorDecorated = texture2D(uDecorationMap, vTextureCoord);
+    
 
     // apply hex pattern
     color.rgb += hex * 0.1;
@@ -94,8 +109,12 @@ void main(void) {
     uv = vec2(vTextureCoord.x, v);
     vec3 colorStretch = texture2D(uMap, uv).rgb;
     float br = length(colorStretch);
-    color.rgb += colorStretch * step(1.3, br) * 0.05 * uStretchLine;
 
+    float t = 0.5;
+    float brStretch = snoise(vec3(vTextureCoord.x * 20.0, vTextureCoord.y, uSeedStretch)) * t + 1.0 - t;
+    brStretch = smoothstep(0.2, 0.8, brStretch);
+
+    color.rgb += colorStretch * step(1.3, br) * 0.05 * uStretchLine * brStretch;
 
     // pixelated
     uv = vec2(vTextureCoord);
@@ -106,13 +125,24 @@ void main(void) {
     vec3 colorPixelated = pixelate(uv, uMap);
     color.rgb = mix(color.rgb, colorPixelated, n);
 
+    // apply curve
+    color.rgb = smoothstep(vec3(0.0), vec3(1.0), color.rgb);
+
+    // apply greyscale
+    color.rgb = greyscale(color.rgb, .25);
+
     // apply color lookup
     color = lookup(color, uLookupMap);
+
+    // add decoration
+    color = mix(color, colorDecorated, colorDecorated.a);
 
     vec3 highlight = texture2D(uHighlightMap, vTextureCoord).rgb;
     vec3 highlightPixelated = pixelate(uv, uHighlightMap).rgb;
     highlight.rgb = mix(highlight.rgb, highlightPixelated, n);
     color.rgb += highlight * 0.6 * uHighlightStrength;
+    
 
     gl_FragColor = color;
+    // gl_FragColor = vec4(vec3(brStretch), 1.0);
 }

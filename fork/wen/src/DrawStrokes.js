@@ -1,5 +1,5 @@
 import { GL, Draw, Geom } from "alfrid";
-
+import Config from "./Config";
 import { random } from "./utils";
 import vs from "shaders/strokes.vert";
 import fs from "shaders/strokes.frag";
@@ -12,14 +12,14 @@ class DrawStrokes extends Draw {
     this.index = 0;
 
     const { width, height } = GL;
-    const scale = 1;
+    const scale = Config.pixelRatio;
     const h = height / this.numSlices;
     const w = width / this.numSlices;
 
     const gapX = (3 / mDensity) * scale;
     const gapY = (6 / mDensity) * scale;
 
-    const mesh = Geom.plane(3 * scale, 12 * scale, 1);
+    const mesh = Geom.plane(3 * scale, 16 * scale, 1);
 
     this.offsets = [];
     for (let j = 0; j < this.numSlices; j++) {

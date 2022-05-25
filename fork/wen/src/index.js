@@ -23,11 +23,10 @@
 import { GL } from "alfrid";
 import Scene from "./SceneApp";
 import Settings from "./Settings";
-import { logError, random, getRandomElement } from "./utils";
+import { random, getRandomElement, logError } from "./utils";
 import preload from "./utils/preload";
 import "./utils/Capture";
 
-import "./debug";
 import addControls from "./utils/addControl";
 import Config from "./Config";
 
@@ -39,32 +38,55 @@ function _init3D() {
     Settings.init();
   }
 
-  if (process.env.NODE_ENV !== "development" || 1) {
-    Config.colorTheme = getRandomElement([
-      "Sunset",
-      "Night",
-      "Green",
-      "Foggy",
-      "Blue",
-    ]);
-    Config.withFrame = false;
-    Config.withStretchLine = random() > 10.5;
-    Config.withSnow = random() > 10.5;
-    Config.pixelated = random() > 10.5;
-    Config.smooth = random() > 0.5;
-    Config.mountainShade = random() > 0.5;
+  // apply features
+  Config.colorTheme = getRandomElement([
+    "Sunset",
+    "Night",
+    "Green",
+    "Foggy",
+    "Blue",
+  ]);
+  const r = 4;
+  Config.moonPosition = random(r / 2, r);
+  if (random() > 0.5) {
+    Config.moonPosition *= -1;
   }
-  // Settings.refresh();
+  Config.superMoon = random() > 0.85;
+  if (Config.superMoon) {
+    Config.moonPosition = random() > 0.5 ? 7 : -7;
+  }
+
+  // shooting stars
+  if (random() > 0.5) {
+    Config.withShooringStar = true;
+    Config.meterShower = random() > 0.85;
+    Config.withMoon = false;
+    const r = 3;
+    Config.moonPosition = random(-r, r);
+  } else {
+    Config.withShooringStar = false;
+    Config.meterShower = false;
+    Config.withMoon = true;
+  }
+
+  Config.withSnow = random() > 0.5;
+  Config.withStretchLine = true;
+  Config.pixelated = false;
+
+  // interactions
+  Config.withPetals = random() > 0.5;
+  Config.withMonolith = random() > 0.5;
+  Config.withFireworks = random() > 0.5;
+  Config.withMilkyway = random() > 0.5;
+
   canvas = document.createElement("canvas");
   canvas.id = "main-canvas";
   document.body.appendChild(canvas);
 
-  GL.init(canvas, { alpha: true, preserveDrawingBuffer: true });
+  GL.init(canvas, { alpha: false, preserveDrawingBuffer: true });
 
   scene = new Scene();
-  if (process.env.NODE_ENV === "development") {
-    addControls(scene);
-  }
+  // addControls(scene);
 }
 
 preload().then(_init3D, logError);

@@ -13,7 +13,7 @@ const resize = (canvas, w, h, GL) => {
   const scale = Math.min(sx, sy);
   tw = w * scale;
   th = h * scale;
-  const left = Math.floor(innerWidth - tw) / 2;
+  const left = (Math.floor(innerWidth - tw) / 2) * 0;
   const top = Math.floor(innerHeight - th) / 2;
 
   canvas.style.cssText = `

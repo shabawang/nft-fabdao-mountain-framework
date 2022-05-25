@@ -25,7 +25,7 @@ void main(void) {
     float theta = mix(-PI, PI, aExtra.y);
     float scale = clamp(uOffset * 2.0 - aExtra.x, 0.0, 1.0);
 
-    vec3 pos = aVertexPosition * mix(1.0, 3.0, aExtra.x) * 0.01 * scale;
+    vec3 pos = aVertexPosition * mix(1.0, 4.0, aExtra.x) * 0.025 * scale;
     pos.yz *= 0.5;
 
     pos = rotate(pos, axis, theta);
@@ -37,6 +37,6 @@ void main(void) {
 
     gl_Position = uProjectionMatrix * uViewMatrix * uModelMatrix * vec4(pos, 1.0);
 
-    float g = mix(0.8, 1.0, aExtra.z);
+    float g = mix(0.9, 1.0, aExtra.z);
     vColor = vec3(g);
 }

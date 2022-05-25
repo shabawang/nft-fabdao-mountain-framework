@@ -2,10 +2,10 @@ import { Draw, Geom } from "alfrid";
 
 import { random, randomGaussian } from "./utils";
 
-import vs from "shaders/snow.vert";
-import fs from "shaders/snow.frag";
+import vs from "shaders/stars.vert";
+import fs from "shaders/stars.frag";
 
-class DrawSnow extends Draw {
+class DrawStars extends Draw {
   constructor() {
     super();
 
@@ -14,10 +14,15 @@ class DrawSnow extends Draw {
     const posOffsets = [];
     const extras = [];
 
-    const r = 20;
-    let num = 1500;
+    const r = 30;
+    let num = 100;
+
+    // avoiding moon position
     while (num--) {
-      posOffsets.push([random(-r, r), random(0, r), random(-r, r)]);
+      // let x = random(r * 0.2, r);
+      let x = random(0, r);
+      if (random() > 0.5) x *= -1;
+      posOffsets.push([x, random(r * 0.35, r * 2), random(-r, -r * 2)]);
       extras.push([randomGaussian(), random(), random()]);
     }
 
@@ -29,4 +34,4 @@ class DrawSnow extends Draw {
   }
 }
 
-export default DrawSnow;
+export default DrawStars;

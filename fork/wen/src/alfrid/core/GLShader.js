@@ -137,7 +137,7 @@ function GLShader(mVertexShader, mFragmentShader) {
     gl.compileShader(shader);
 
     if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-      console.warn("Error in Shader : ", gl.getShaderInfoLog(shader));
+      console.error("Error in Shader : ", gl.getShaderInfoLog(shader));
       console.log(addLineNumbers(mShaderStr));
       return null;
     }

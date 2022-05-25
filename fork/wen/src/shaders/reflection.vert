@@ -6,22 +6,15 @@ attribute vec3 aVertexPosition;
 uniform mat4 uModelMatrix;
 uniform mat4 uViewMatrix;
 uniform mat4 uProjectionMatrix;
-
-uniform sampler2D uHeightMap;
-uniform float uMaxHeight;
-uniform float uPlaneSize;
+uniform vec3 uTranslate;
 
 varying vec2 vTextureCoord;
 varying vec3 vNormal;
 
 void main(void) {
-    vec3 pos = aVertexPosition;
-    vec2 uv = pos.xz / uPlaneSize * .5 + .5;
-    uv.y = 1.0 - uv.y;
-
-    float h = texture2D(uHeightMap, uv).r;
-    pos.y = h * uMaxHeight - 0.1;
+    vec3 pos = aVertexPosition * vec3(1.0, 0.0, 1.0) + uTranslate;
 
     gl_Position = uProjectionMatrix * uViewMatrix * uModelMatrix * vec4(pos, 1.0);
-    vTextureCoord = uv;
+
+    gl_PointSize = mix(5.0, 10.0, aVertexPosition.y);
 }

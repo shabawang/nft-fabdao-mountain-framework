@@ -2,6 +2,7 @@ import { GL, Mesh, Draw, CameraOrtho, FrameBuffer } from "alfrid";
 import { mix, random, randomFloor, getRandomElement } from "./utils";
 import Color from "./utils/Color";
 import { vec2 } from "gl-matrix";
+import Config from "./Config";
 
 // shaders
 import vs from "shaders/dots.vert";
@@ -12,9 +13,10 @@ const generateHexTexture = (
   height,
   mColors,
   mBgColor = 0,
-  mScale = 1
+  mScale = 0.75
 ) => {
-  let scale = mScale;
+  const { pixelRatio } = Config;
+  let scale = mScale * pixelRatio;
   let bgColor = mBgColor;
 
   GL.disable(GL.CULL_FACE);
@@ -66,7 +68,7 @@ const generateHexTexture = (
 
   const lineTo = (mPointA, mPointB, mSize, mColor = [1, 1, 1]) => {
     const l = vec2.distance(mPointA, mPointB);
-    const density = random(0.6, 0.5) / scale;
+    const density = random(0.4, 0.5) / scale;
     const num = Math.floor(l * density);
     if (num > maxNum) {
       maxNum = num;
@@ -75,12 +77,12 @@ const generateHexTexture = (
     const seed = randomFloor(total);
 
     // const s = scale < 2 ? 1.5 : 2;
-    const s = 2;
+    const s = 0.75;
 
     pointAs.push(mPointA);
     pointBs.push(mPointB);
     colors.push(mColor);
-    extras.push([num, mSize * s, seed]);
+    extras.push([num, mSize * s * pixelRatio, seed]);
   };
 
   const draw = () => {
@@ -107,7 +109,7 @@ const generateHexTexture = (
     const w = cos(60 * RAD) * r;
 
     const drawMaze = (tx, ty) => {
-      let num = 14;
+      let num = 16;
       const cr = 0.05;
       const color = new Color(getRandomElement(mColors));
       color.saturation += random(-cr, 0);

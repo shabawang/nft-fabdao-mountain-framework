@@ -22,7 +22,6 @@ const init = (mAssets) => {
       file: _file,
     };
   });
-  // console.table(_assets);
 };
 
 const get = (mName) => {

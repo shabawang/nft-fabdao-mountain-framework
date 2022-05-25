@@ -16,6 +16,25 @@ export const random = (a, b) => {
   return a + (b - a) * fxrand();
 };
 
+export const randomGaussian = (a, b, n = 3) => {
+  let rand = 0;
+
+  for (var i = 0; i < n; i += 1) {
+    rand += random();
+  }
+
+  let p = rand / n;
+  if (a === undefined) {
+    return p;
+  }
+
+  if (b === undefined) {
+    return p * a;
+  }
+
+  return a + (b - a) * p;
+};
+
 export const randomFloor = (a, b) => {
   return Math.floor(random(a, b));
 };

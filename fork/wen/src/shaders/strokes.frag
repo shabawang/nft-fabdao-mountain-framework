@@ -11,8 +11,6 @@ varying vec3 vExtra;
 uniform float uSeed;
 uniform sampler2D uMap;
 
-#pragma glslify: snoise    = require(./glsl-utils/snoise.glsl)
-
 void main(void) {
     vec3 color = texture2D(uMap, vUV).rgb;
     color = mix(color, vec3(0.0), .15  * vExtra.y);

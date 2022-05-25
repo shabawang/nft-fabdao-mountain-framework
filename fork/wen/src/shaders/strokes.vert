@@ -32,7 +32,11 @@ void main(void) {
 
     float n = snoise(vec3(aPosOffset.xy, uSeed) * 0.002);
 
+    float s = snoise(vec3(uSeed, posOffset.xy) * 0.002);
     vec3 pos = aVertexPosition * mix(0.8, 1.0, aExtra.x);
+
+    float t = 0.3;
+    pos.y *= 1.0 - t + s * t;
 
     // rotation
     vec2 center = vec2(0.0);

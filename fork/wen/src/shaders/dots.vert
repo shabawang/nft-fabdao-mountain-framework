@@ -30,5 +30,5 @@ void main(void) {
     gl_Position = uProjectionMatrix * uViewMatrix * vec4(pos, z, 1.0);
     vColor = aColor * mix(0.9, 1.0, aTextureCoord.y);
 
-    gl_PointSize = aExtra.y * mix(1.0, 1.5, aTextureCoord.x);
+    gl_PointSize = aExtra.y * mix(0.5, 2.0, aTextureCoord.x);
 }

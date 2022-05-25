@@ -4,9 +4,10 @@
 
 precision highp float;
 varying vec2 vTextureCoord;
-uniform sampler2D texture;
+uniform vec3 uColor;
 uniform float uSeed;
-uniform float uNoiseScale;
+uniform float uFull;
+uniform float uNoiseDetail;
 
 #pragma glslify: snoise    = require(./glsl-utils/snoise.glsl)
 #pragma glslify: rotate    = require(./glsl-utils/rotate.glsl)
@@ -25,16 +26,21 @@ float fbm(vec3 p) {
     return n * .5 + .5;
 }
 
-
 void main(void) {
-    float noise = fbm(vec3(vTextureCoord, uSeed) * uNoiseScale);
+    float d = distance(vTextureCoord, vec2(.5));
+    if(d > .5) {
+        discard;
+    }
 
-    // gradient drop
-    float d = smoothstep(0.2, 0.75, vTextureCoord.y);
-    noise += pow(vTextureCoord.y, 2.0) * 1.2;
-    d = pow(d, 3.0);
-    noise *= d;
+    float r = 0.02;
+    // float r = 0.1;
+    d = distance(vTextureCoord, vec2(0.5-r, 0.5+r));
+    if(d < 0.5-r && uFull < 0.5) {
+        discard;
+    }
 
+    float g = fbm(vec3(vTextureCoord, uSeed) * uNoiseDetail) * .5 + .5;
+    g = mix(g, 1.0, .5);
 
-    gl_FragColor = vec4(vec3(noise), 1.0);
+    gl_FragColor = vec4(uColor * g, 1.0);
 }

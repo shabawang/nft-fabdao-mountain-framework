@@ -11,36 +11,33 @@ export default (scene) => {
     save: () => {
       saveJson(Config, "Settings");
     },
-    generate: () => {
-      reload();
-    },
   };
 
   const gui = new dat.GUI({ width: 300 });
   window.gui = gui;
+  dat.GUI.toggleHide();
 
   gui.add(Config, "autoSave").onFinishChange(reload);
-  gui.add(Config, "mountainHeight", 2, 4).onFinishChange(reload);
-  gui.add(Config, "stopAfterRender").onFinishChange(reload);
+  gui.add(Config, "maxHeight", 1, 5).onFinishChange(reload);
+  gui.add(Config, "noiseScale", 0.1, 5).onFinishChange(reload);
+  gui.add(Config, "withMoon").onFinishChange(reload);
+  gui.add(Config, "withShooringStar").onFinishChange(reload);
   gui.add(Config, "withSnow").onFinishChange(reload);
   gui.add(Config, "withFrame").onFinishChange(reload);
   gui.add(Config, "withStretchLine").onFinishChange(reload);
   gui.add(Config, "pixelated").onFinishChange(reload);
-  gui.add(Config, "smooth").onFinishChange(reload);
   gui.add(Config, "mountainShade").onFinishChange(reload);
-
-  const fExtra = gui.addFolder("Extra Settings");
-  fExtra.add(Config, "fogStrength", 0, 1).onFinishChange(reload);
-  fExtra.add(Config, "fov", 10, 160).onFinishChange(() => {
-    reload();
-  });
-  fExtra.addColor(Config, "bgColor").onFinishChange(refresh);
-  fExtra.addColor(Config, "fogColor").onFinishChange(refresh);
-
+  const fInteraction = gui.addFolder("Interactions");
+  fInteraction.add(Config, "withPetals").onFinishChange(reload);
+  fInteraction.add(Config, "withMonolith").onFinishChange(reload);
+  fInteraction.add(Config, "withFireworks").onFinishChange(reload);
+  fInteraction.add(Config, "withMilkyway").onFinishChange(reload);
+  fInteraction.open();
   gui
     .add(Config, "colorTheme", ["Sunset", "Night", "Green", "Foggy", "Blue"])
     .onFinishChange(reload);
-  gui.add(oControl, "generate").name("Generate");
+
+  gui.add(Config, "pixelRatio", [1, 2]).onFinishChange(reload);
   gui.add(oControl, "save").name("Save Settings");
   gui.add(Settings, "reset").name("Reset Default");
 };

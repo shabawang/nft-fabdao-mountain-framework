@@ -5,7 +5,7 @@ export const isPowerOfTwo = (x) => {
   return x !== 0 && !(x & (x - 1));
 };
 
-export const getTextureParameters = function (mParams, mWidth, mHeight) {
+export const getTextureParameters = function(mParams, mWidth, mHeight) {
   if (!mParams.minFilter) {
     let minFilter = WebGLConst.LINEAR;
     if (mWidth && mWidth) {

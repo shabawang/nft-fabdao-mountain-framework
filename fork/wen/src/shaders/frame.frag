@@ -14,8 +14,8 @@ uniform vec3 uColor;
 void main(void) {
     vec2 t = vTextureCoord;
     t.y /= uRatio;
-    vec3 n = curlNoise(vec3(t, uSeed) * 4.0);
-    vec2 uv = vTextureCoord + n.xy * 0.001;
+    vec3 n = curlNoise(vec3(t, uSeed) * 3.0);
+    vec2 uv = vTextureCoord + n.xy * 0.0015;
 
     uv = abs(uv - 0.5);
     float a0 = smoothstep(0.5 - uWidth, 0.5 - uWidth + 0.001, uv.x); 

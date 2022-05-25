@@ -6,7 +6,6 @@ import AssetsLoader from "assets-loader";
 const loadAssets = (gl) =>
   new Promise((resolve, reject) => {
     const loader = document.body.querySelector(".Loading-Bar");
-    // console.log("Load Assets", assets);
     if (assets.length > 0) {
       document.body.classList.add("isLoading");
 

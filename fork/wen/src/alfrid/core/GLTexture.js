@@ -168,11 +168,7 @@ class GLTexture {
     );
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, this._params.wrapS);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, this._params.wrapT);
-    // gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, this._premultiplyAlpha);
-    gl.pixelStorei(
-      gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,
-      this._params.premultiplyAlpha
-    );
+    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, this._premultiplyAlpha);
 
     // const ext = this.GL.extensions["EXT_texture_filter_anisotropic"];
     // if (ext) {
