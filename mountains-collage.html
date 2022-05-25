@@ -11,11 +11,24 @@
             border: 0px;
         }
 
+        main {
+            background: red;
+
+            width: 100vw;
+            height: 100vh;
+
+            border: 0px;
+            padding: 0px;
+            margin: 0px;
+
+            overflow: hidden;
+        }
+
         .mountainIframe {
             display: block;
             float: left;
 
-            width: 20vw;
+            width: 10%;
             height: 100vh;
 
             box-sizing: border-box;
@@ -29,89 +42,90 @@
     <!-- if you need to import js scripts do it here -->
   </head>
   <body>
-      <iframe id="mountain-1" class="mountainIframe" src="main-nft.html?mountainIndex=0&isCollage=1">
-      </iframe>
+    <main id="mainArea">
+        <!-- Will be something like this, but will be created through script -->
+        <!-- <iframe id="mountain-1" class="mountainIframe" src="main-nft.html?mountainIndex=0&isCollage=1">
+        </iframe>       -->
+    </main>
 
-      <iframe id="mountain-2" class="mountainIframe" src="main-nft.html?mountainIndex=1&isCollage=1">
-      </iframe>
 
-      <iframe id="mountain-3" class="mountainIframe" src="main-nft.html?mountainIndex=2&isCollage=1">
-      </iframe>
-
-      <iframe id="mountain-4" class="mountainIframe" src="main-nft.html?mountainIndex=3&isCollage=1">
-      </iframe>
-
-      <iframe id="mountain-5" class="mountainIframe" src="main-nft.html?mountainIndex=4&isCollage=1">
-      </iframe>
 
     <!-- WEBPACK will inject the bundle.js here -->
     <script type="text/javascript">
 
+    let mountainIframes = [];
     let mountainStatus = [];
 
-    for(let i=0; i< 5; i++)
-    {
-        mountainStatus[i] = {
-            'iframeId':'mountain-'+ (i+1),
-            'ready': false,
-            'startY':0.0,
-            'endY':0.0,
-            'alignOffset':0.0
-        };
-    }
+    let collabFeatures = {};
 
-    window.onmessage = function(e){
-        let eventName = e.data.event;
-        let args = e.data.args;
+    $(window).on('load', function(){
+        startSequence();
+    });
 
-        if(e.data.event == "ready")
+    async function startSequence () {
+        await createMountainIframes();
+        await loadMountainIframes(); // setup src links and get StartY, EndY Data
+
+        // wait till all mountain frame data ready
+        while(true)
         {
-            let mountainIndex = args.mountainIndex;
+            let isAllMountainReady = checkAllMountainReady();
 
-            console.log("mountain ready: " + mountainIndex);
-            console.log(args);
-
-            mountainStatus[mountainIndex].ready = true;
-            mountainStatus[mountainIndex].startY = args.startY;
-            mountainStatus[mountainIndex].endY = args.endY;
-
-            checkAllMountainReady();
-            //startDrawWithOffset(mountainIndex, (Math.random() - 0.5) * 1000);
-        }
-    };
-
-    function checkAllMountainReady () {
-        let allReady = true;
-        for(let i=0; i< mountainStatus.length; i++)
-        {
-            if(mountainStatus[i].ready == false)
-            {
-                allReady = false;
+            if(isAllMountainReady)
                 break;
-            }
+            else
+                await sleep(100);
         }
 
-        if(allReady)
-        {
-            console.log("ALL READY!");
-            console.log(mountainStatus);
+        processCollabFeatures();
+        processMountainOffsets(); // calculate offsets
+        await drawMountainsOneByOne ();
+    }
 
-            processMountainOffsets();
+    async function createMountainIframes () {
+        // some script loading
+        let mountainNum = 6;
+        let iframeWidth = 100.0 / 6;
+
+        for(let i=0; i< mountainNum; i++)
+        {
+            let newId = 'mountain-' + i;
+            let newIframe = $('<iframe></iframe>').attr('id', newId).addClass('mountainIframe').css('width', iframeWidth + '%');
+
+            let newStatus = {
+                'iframeId': newId,
+                'ready': false,
+                'finishDraw': false,
+                'startY':0.0,
+                'endY':0.0,
+                'alignOffset':0.0
+            };
+
+            mountainIframes[i] = newIframe;
+            mountainStatus[i] = newStatus;
+
+            // add into html
+            $('#mainArea').append(newIframe);
         }
     }
 
-    function processMountainOffsets () {
-
-        // make mountains connect
-        let offsetSum = 0.0;
-        for(let i=1; i< mountainStatus.length; i++)
+    async function loadMountainIframes () {
+        // get ready status first
+        for(let i=0; i< mountainIframes.length; i++)
         {
-            let diffFromLastMountain = mountainStatus[i-1].endY - mountainStatus[i].startY;
-            offsetSum += diffFromLastMountain;
+            let targetIframe = mountainIframes[i];
 
-            mountainStatus[i].alignOffset = offsetSum;
+            // this data will be fetching through ETH api in the actual use
+            let srcUrl = 'main-nft.html';
+            let srcParams = 'mountainIndex=' + i + '&isCollage=1';
+
+            $(targetIframe).attr('src', srcUrl + '?' + srcParams);
+
+            await sleep(50);
         }
+    }
 
+    async function drawMountainsOneByOne () {
 
         // calculate middle line
         let checkPointY = mountainStatus[0].startY;
@@ -131,18 +145,93 @@
 
         let middleY = (maxY + minY) * 0.5;
         let windowOffset = window.innerHeight * 0.5 - middleY;
-        console.log("window things");
-        console.log(middleY);
-        console.log(window.innerHeight);
-        console.log(windowOffset);
-
+        // console.log("window things");
+        // console.log(middleY);
+        // console.log(window.innerHeight);
+        // console.log(windowOffset);
 
         // draw all mountains
         for(let i=0; i< mountainStatus.length; i++)
         {
             mountainStatus[i].alignOffset += windowOffset;
+            console.log(mountainStatus[i]);
+
             startDrawWithOffset(i, mountainStatus[i].alignOffset);
+
+            // wait till draw finish
+            while(true)
+            {
+                if(mountainStatus[i].finishDraw == true)
+                {
+                    console.log('mountain ' + i + ' draw okay, draw next');
+                    break;
+                }
+                else
+                {
+                    console.log('mountain ' + i + ' not ready, waiting');
+                    await sleep(100);
+                }
+            }
         }
+    }
+
+    function checkAllMountainReady () {
+        let allReady = true;
+        for(let i=0; i< mountainStatus.length; i++)
+        {
+            if(mountainStatus[i].ready == false)
+            {
+                allReady = false;
+                break;
+            }
+        }
+
+        return allReady;
+    }
+
+    function processMountainOffsets () {
+        // make mountains connect
+        let offsetSum = 0.0;
+        for(let i=1; i< mountainStatus.length; i++)
+        {
+            let diffFromLastMountain = mountainStatus[i-1].endY - mountainStatus[i].startY;
+            offsetSum += diffFromLastMountain;
+
+            mountainStatus[i].alignOffset = offsetSum;
+        }
+    }
+
+    function processCollabFeatures () {
+        if(Math.random() > 0.5)
+            collabFeatures.borderWidth = Math.random() * 40 + 10;
+        else
+            collabFeatures.borderWidth = 0.0;
+
+        collabFeatures.CheYu = randomDataArray();
+        collabFeatures.Wen = randomDataArray();
+        collabFeatures.Lien = randomDataArray();
+        collabFeatures.Jinyao = randomDataArray();
+        collabFeatures.Oivm = randomDataArray();
+
+        console.log('Collab Data Inputs:');
+        console.log(collabFeatures);
+    }
+
+    function randomDataArray () {
+        let data = [];
+
+        // empty
+        if(Math.random() < 0.5)
+            return data;
+
+        let count = Math.floor(Math.random() * 3) + 1;
+
+        for(let i=0; i< count; i++)
+        {
+            data[i] = Math.random() * 1.0;
+        }
+
+        return data;
     }
 
     function startDrawWithOffset (mountainIndex, offsetValue)
@@ -151,10 +240,40 @@
 
         let message = {
             'event':'DrawMountainsWithOffset',
-            'args': {'offset':offsetValue}
+            'args': {'offset':offsetValue, 'collabData': collabFeatures}
         };
         iframeObj.contentWindow.postMessage(message, '*');
     }
+
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    window.onmessage = function(e){
+        let eventName = e.data.event;
+        let args = e.data.args;
+
+        if(e.data.event == "ready")
+        {
+            let mountainIndex = args.mountainIndex;
+
+            console.log("mountain ready: " + mountainIndex);
+            console.log(args);
+
+            mountainStatus[mountainIndex].ready = true;
+            mountainStatus[mountainIndex].startY = args.startY;
+            mountainStatus[mountainIndex].endY = args.endY;
+        }
+        else if(e.data.event == 'draw_finish')
+        {
+            let mountainIndex = args.mountainIndex;
+
+            console.log("mountain draw finish: " + mountainIndex);
+            console.log(args);
+
+            mountainStatus[mountainIndex].finishDraw = true;
+        }
+    };
     </script>
   </body>
 </html>

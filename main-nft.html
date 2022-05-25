@@ -58,21 +58,15 @@
 
         if(eventName == 'DrawMountainsWithOffset')
         {
-            NY_GetArtistCrossStatus();
-            NY_StartDrawMountain(args.offset, NY_isCheYu, NY_isWen, NY_isLien, NY_isJinyao, NY_isOivm);
+            //NY_GetArtistCrossStatus();
+            let collab = args.collabData;
+            NY_StartDrawMountain(args.offset, collab.borderWidth, collab.CheYu, collab.Wen, collab.Lien, collab.Jinyao, collab.Oivm);
         }
     }
 
     function NY_GetArtistCrossStatus () {
         // do some query to check if user holding other artists tokens
-
-        // nothing for now
-
-        NY_isCheYu = false;
-        NY_isWen = false;
-        NY_isLien = false;
-        NY_isJinyao = false;
-        NY_isOivm = false;
+        // not sure do it here in every NFT, or do only in the collab page
     }
     </script>
     <!-- if you need to import js scripts do it here -->
