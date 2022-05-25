@@ -152,8 +152,10 @@ class SceneApp extends Scene {
     screenOffset = 0;
 
     // height maps
-    this._textureHeight0 = generateHeightMap(2048);
-    this._textureHeight1 = generateHeightMap(2048);
+    const noiseScale = 1;
+    const detailLevel = Config.smooth ? 2 : 8;
+    this._textureHeight0 = generateHeightMap(2048, noiseScale, detailLevel);
+    this._textureHeight1 = generateHeightMap(2048, noiseScale, detailLevel);
 
     // color lookup table
     this._textureLookup = Assets.get(`lookup${Config.colorTheme}`);
@@ -267,6 +269,7 @@ class SceneApp extends Scene {
     this._drawSnow.uniform("uOffset", this._drawBelts0.percent).draw();
     this._fboRenderDecoration.unbind();
 
+    console.log("Config.withSnow", Config.withSnow);
     // combine
     this._fboRender.bind();
     GL.clear(bg[0], bg[1], bg[2], 1);

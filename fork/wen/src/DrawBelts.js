@@ -37,8 +37,8 @@ class DrawBelts extends Draw {
       count++;
     }
 
-    const totalBelts = 200;
-    const planeSize = 10;
+    const totalBelts = 150;
+    const planeSize = 7.5;
     const posOffsets = [
       [0, 1, random()],
       [planeSize, 1, random()],

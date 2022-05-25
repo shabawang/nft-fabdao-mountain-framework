@@ -6,6 +6,7 @@ export default {
   withSnow: true,
   pixelated: true,
   mountainShade: true,
+  smooth: false,
   fogStrength: 1,
   threshold: 0.6,
   bgColor: [172.5, 164.5, 158],

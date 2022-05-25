@@ -26,6 +26,7 @@ export default (scene) => {
   gui.add(Config, "withFrame").onFinishChange(reload);
   gui.add(Config, "withStretchLine").onFinishChange(reload);
   gui.add(Config, "pixelated").onFinishChange(reload);
+  gui.add(Config, "smooth").onFinishChange(reload);
   gui.add(Config, "mountainShade").onFinishChange(reload);
 
   const fExtra = gui.addFolder("Extra Settings");

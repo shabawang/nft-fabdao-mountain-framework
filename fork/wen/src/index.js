@@ -36,10 +36,10 @@ let canvas;
 
 function _init3D() {
   if (process.env.NODE_ENV === "development") {
-    // Settings.init();
+    Settings.init();
   }
 
-  if (process.env.NODE_ENV !== "development") {
+  if (process.env.NODE_ENV !== "development" || 1) {
     Config.colorTheme = getRandomElement([
       "Sunset",
       "Night",
@@ -48,10 +48,11 @@ function _init3D() {
       "Blue",
     ]);
     Config.withFrame = false;
-    Config.withStretchLine = random() > 0.5;
-    Config.withSnow = random() > 0.5;
-    Config.pixelated = random() > 0.5;
-    Config.mountainShade = random() > -0.5;
+    Config.withStretchLine = random() > 10.5;
+    Config.withSnow = random() > 10.5;
+    Config.pixelated = random() > 10.5;
+    Config.smooth = random() > 0.5;
+    Config.mountainShade = random() > 0.5;
   }
   // Settings.refresh();
   canvas = document.createElement("canvas");

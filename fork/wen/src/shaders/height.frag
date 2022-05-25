@@ -1,12 +1,14 @@
-// copy.frag
-
-#define SHADER_NAME SIMPLE_TEXTURE
+#version 300 es
 
 precision highp float;
-varying vec2 vTextureCoord;
+in vec2 vTextureCoord;
+
 uniform sampler2D texture;
 uniform float uSeed;
 uniform float uNoiseScale;
+uniform float uDetalLevel;
+
+out vec4 oColor;
 
 #pragma glslify: snoise    = require(./glsl-utils/snoise.glsl)
 
@@ -14,7 +16,8 @@ uniform float uNoiseScale;
 
 float fbm(vec3 p) {
     float n = 0.0;
-    for(int i=0; i<LEVEL; i++) {
+    int num = int(uDetalLevel);
+    for(int i=0; i<num; i++) {
         float mul = pow(2.0, float(i));
         n += snoise(p * mul) / mul;
     }
@@ -29,5 +32,5 @@ void main(void) {
     t = pow(t, 2.0);
     n *= t;
 
-    gl_FragColor = vec4(vec3(n), 1.0);
+    oColor = vec4(vec3(n), 1.0);
 }
