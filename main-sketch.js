@@ -71,7 +71,7 @@ function setup () {
     let startMountainY = mountains[mainMountainIndex].calculateY(0);
     let endMountainY = mountains[mainMountainIndex].calculateY(windowWidth);
 
-    NY_MountainReady(startMountainY, endMountainY);
+    NY_MountainReady(startMountainY, endMountainY, (upMountains + bottomMountains));
 }
 
 function drawMountains () {
@@ -155,7 +155,7 @@ class MountainCurve {
 
 
 // please call this function when you calculated your StartY and EndY
-function NY_MountainReady (mountainStartY, mountainEndY)
+function NY_MountainReady (mountainStartY, mountainEndY, featureValue)
 {
     if(NY_isCollage)
     {
@@ -164,7 +164,8 @@ function NY_MountainReady (mountainStartY, mountainEndY)
             'args':{
                 'mountainIndex':NY_mountainIndex,
                 'startY':mountainStartY,
-                'endY':mountainEndY
+                'endY':mountainEndY,
+                'featureValue':featureValue
             }
         };
 
@@ -172,18 +173,17 @@ function NY_MountainReady (mountainStartY, mountainEndY)
     }
     else
     {
-        NY_StartDrawMountain(0.0);
+        NY_StartDrawMountain(0.0, [], [], [], [], []);
     }
 }
 
 // please use this function to start draw
 // this will be called after the offset value is calulated,
 // or will be called if no offset value needed (when viewing the NFT alone)
-function NY_StartDrawMountain (offset, borderWidth, CheYu, Wen, Lien, Jinyao, Oivm)
+function NY_StartDrawMountain (borderWidth, CheYu, Wen, Lien, Jinyao, Oivm)
 {
     // you should overwrite this function for you own need,
     // the following code is only for demo purpose
-    allMountainOffset = offset;
 
     // collab features
     console.log(borderWidth);
