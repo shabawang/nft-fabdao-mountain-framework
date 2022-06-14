@@ -71,7 +71,7 @@ function setup () {
     let startMountainY = mountains[mainMountainIndex].calculateY(0);
     let endMountainY = mountains[mainMountainIndex].calculateY(windowWidth);
 
-    NY_MountainReady(startMountainY, endMountainY, (upMountains + bottomMountains));
+    NY_MountainReady(startMountainY, endMountainY, windowHeight, -1, totalMountainNum);
 }
 
 function drawMountains () {
@@ -155,65 +155,60 @@ class MountainCurve {
 
 
 // please call this function when you calculated your StartY and EndY
-function NY_MountainReady (mountainStartY, mountainEndY, featureValue)
-{
-    if(NY_isCollage)
-    {
-        let message = {
-            'event':'ready',
-            'args':{
-                'mountainIndex':NY_mountainIndex,
-                'startY':mountainStartY,
-                'endY':mountainEndY,
-                'featureValue':featureValue
-            }
-        };
+function NY_MountainReady(mountainStartY, mountainEndY, fullHeight, artistId, featureValue) {
+  if (NY_isCollage) {
+    let message = {
+      'event': 'ready',
+      'args': {
+        'mountainIndex': NY_mountainIndex,
+        'artistId':artistId,
+        'startY': mountainStartY,
+        'endY': mountainEndY,
+        'fullHeight': fullHeight,
+        'featureValue': featureValue
+      }
+    };
 
-        window.top.postMessage(message, '*');
-    }
-    else
-    {
-        NY_StartDrawMountain(0.0, [], [], [], [], []);
-    }
+    window.top.postMessage(message, '*');
+  } else {
+    NY_StartDrawMountain(0.0, [], [], [], [], []);
+  }
 }
 
 // please use this function to start draw
 // this will be called after the offset value is calulated,
 // or will be called if no offset value needed (when viewing the NFT alone)
-function NY_StartDrawMountain (borderWidth, CheYu, Wen, Lien, Jinyao, Oivm)
-{
-    // you should overwrite this function for you own need,
-    // the following code is only for demo purpose
+function NY_StartDrawMountain(borderWidth, CheYu, Wen, Lien, Jinyao, Oivm) {
+  // you should overwrite this function for you own need,
+  // the following code is only for demo purpose
 
-    // collab features
-    console.log(borderWidth);
-    console.log(CheYu);
-    console.log(Wen);
-    console.log(Lien);
-    console.log(Jinyao);
-    console.log(Oivm);
+  // collab features
+  console.log("==== collab features ====");
+  console.log(borderWidth);
+  console.log(CheYu);
+  console.log(Wen);
+  console.log(Lien);
+  console.log(Jinyao);
+  console.log(Oivm);
 
 
-    drawMountains();
+  drawMountains();
 
-    let startPoint = mountains[mainMountainIndex].calculateY(0);
-    let endPoint = mountains[mainMountainIndex].calculateY(windowWidth);
+  // let startPoint = mountains[mainMountainIndex].calculateY(0);
+  // let endPoint = mountains[mainMountainIndex].calculateY(defultW);
 }
 
-function NY_FinishDrawMountain () {
-    if(NY_isCollage)
-    {
-        let message = {
-            'event':'draw_finish',
-            'args':{
-                'mountainIndex':NY_mountainIndex
-            }
-        };
+function NY_FinishDrawMountain() {
+  if (NY_isCollage) {
+    let message = {
+      'event': 'draw_finish',
+      'args': {
+        'mountainIndex': NY_mountainIndex
+      }
+    };
 
-        window.top.postMessage(message, '*');
-    }
-    else
-    {
-        // does nothing
-    }
+    window.top.postMessage(message, '*');
+  } else {
+    // does nothing
+  }
 }

@@ -3,7 +3,7 @@
   <head>
     <title>Mountains</title>
     <meta charset="utf-8">
-    <script src="jquery-3.6.0.min.js"></script>
+    <script src="src/jquery-3.6.0.min.js"></script>
     <style>
         body {
             padding: 0px;
@@ -131,16 +131,8 @@
         {
             let targetIframe = mountainIframes[i];
 
-            // random pick artist
-            let artist = parseInt(randomRange(0, 2));
-            let srcUrl = 'main-nft.html';
-
-            if(artist == 0)
-                srcUrl = "nft-demo-newyellow/main-nft.html";
-            else if(artist == 1)
-                srcUrl = "nft-aluan/main-nft.html";
-
             // this data will be fetching through ETH api in the actual use
+            let srcUrl = 'main-nft.html';
             let srcParams = 'mountainIndex=' + i + '&isCollage=1';
 
             $(targetIframe).attr('src', srcUrl + '?' + srcParams);
@@ -298,12 +290,6 @@
             mountainStatus[mountainIndex].finishDraw = true;
         }
     };
-
-    function randomRange(from, to)
-    {
-        let diff = (to-from);
-        return from + diff * Math.random();
-    }
     </script>
   </body>
 </html>
