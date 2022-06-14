@@ -219,8 +219,8 @@ function setup() {
 
   // imageMode(CENTER);
   let featureStrength = 6.0;
-  NY_MountainReady(startMountainY, endMountainY, 1920, featureStrength);
-
+  NY_MountainReady(startMountainY, endMountainY, 1920, 4, featureStrength);
+  // artist: 0:CheYu 1:Wen 2:Lien 3:JinYo 4:Oivm
 }
 
 function drawMountains() {
@@ -245,12 +245,13 @@ function fxRandomRange(from, to) {
   return fxrand() * (to - from) + from;
 }
 
-function NY_MountainReady(mountainStartY, mountainEndY, fullHeight, featureValue) {
+function NY_MountainReady(mountainStartY, mountainEndY, fullHeight, artistId, featureValue) {
   if (NY_isCollage) {
     let message = {
       'event': 'ready',
       'args': {
         'mountainIndex': NY_mountainIndex,
+        'artistId':artistId,
         'startY': mountainStartY,
         'endY': mountainEndY,
         'fullHeight': fullHeight,
@@ -269,12 +270,13 @@ function NY_StartDrawMountain(borderWidth, CheYu, Wen, Lien, Jinyao, Oivm) {
   // the following code is only for demo purpose
 
   // collab features
-  // console.log(borderWidth);
-  // console.log(CheYu);
-  // console.log(Wen);
-  // console.log(Lien);
-  // console.log(Jinyao);
-  // console.log(Oivm);
+  console.log("==== collab features ====");
+  console.log(borderWidth);
+  console.log(CheYu);
+  console.log(Wen);
+  console.log(Lien);
+  console.log(Jinyao);
+  console.log(Oivm);
 
 
   drawMountains();

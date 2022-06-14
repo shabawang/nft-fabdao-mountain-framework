@@ -12,7 +12,7 @@
         }
 
         main {
-            background: red;
+            background: #111;
 
             width: 100vw;
             height: 100vh;
@@ -72,18 +72,7 @@
 
     async function startSequence () {
         await createMountainIframes();
-        await loadMountainIframes(); // setup src links and get StartY, EndY Data
-
-        // wait till all mountain frame data ready
-        while(true)
-        {
-            let isAllMountainReady = checkAllMountainReady();
-
-            if(isAllMountainReady)
-                break;
-            else
-                await sleep(100);
-        }
+        await loadMountainIframesOneByOne(); // setup src links and get StartY, EndY Data
 
         processCollabFeatures();
         processMountainOffsets(); // calculate offsets
@@ -136,34 +125,26 @@
         }
     }
 
-    async function loadMountainIframes () {
+    async function loadMountainIframesOneByOne () {
         // get ready status first
         for(let i=0; i< mountainIframes.length; i++)
         {
             let targetIframe = mountainIframes[i];
 
             // this data will be fetching through ETH api in the actual use
-            let srcUrl = 'nft-aluan/main-nft.html';
+            let srcUrl = 'main-nft.html';
             let srcParams = 'mountainIndex=' + i + '&isCollage=1';
 
             $(targetIframe).attr('src', srcUrl + '?' + srcParams);
 
-            await sleep(50);
-        }
-    }
-
-    function checkAllMountainReady () {
-        let allReady = true;
-        for(let i=0; i< mountainStatus.length; i++)
-        {
-            if(mountainStatus[i].ready == false)
+            while(true)
             {
-                allReady = false;
-                break;
+                if(mountainStatus[i].ready)
+                    break;
+                else
+                    await sleep(50);
             }
         }
-
-        return allReady;
     }
 
     function processMountainOffsets () {
@@ -238,8 +219,6 @@
         // draw all mountains
         for(let i=0; i< mountainStatus.length; i++)
         {
-            console.log(mountainStatus[i]);
-
             startDrawWithOffset(i, mountainStatus[i].alignOffset);
 
             // wait till draw finish
@@ -297,6 +276,7 @@
             mountainStatus[mountainIndex].ready = true;
             mountainStatus[mountainIndex].startY = args.startY;
             mountainStatus[mountainIndex].endY = args.endY;
+            mountainStatus[mountainIndex].artistId = args.artistId;
             mountainStatus[mountainIndex].fullHeight = args.fullHeight;
             mountainStatus[mountainIndex].featureValue = args.featureValue;
         }
