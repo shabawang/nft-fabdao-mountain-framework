@@ -124,7 +124,7 @@ function setup() {
   ]
 
   let ch_ptn = R.random_int(0, 14);
-  ch_ptn = 6;
+  // ch_ptn = 6;
   {
     bgid = ptn_color[ch_ptn][0];
     bgid2 = ptn_color[ch_ptn][1];
@@ -174,10 +174,10 @@ function setup() {
   ghBird.fill(255);
   ghBird.noStroke();
   ghBird.textSize(32);
-  for(let i=0;i,i<20;i++){
-    ghBird.rect(50,i*96,80,10);
-    ghBird.text(i*96,130,i*96);
-  }
+  // for(let i=0;i,i<20;i++){
+  //   ghBird.rect(50,i*96,80,10);
+  //   ghBird.text(i*96,130,i*96);
+  // }
   drawFrame();
 
   if (hscal <0.1 && shiftL <=0.2) {
@@ -237,7 +237,6 @@ function drawMountains() {
   blendMode(MULTIPLY);
   image(ghNoise, 0, 0, width, height);
 
-
   NY_FinishDrawMountain();
 }
 
@@ -286,7 +285,7 @@ function NY_StartDrawMountain(borderWidth, CheYu, Wen, Lien, Jinyao, Oivm) {
 }
 
 function mouseClicked() {
-  save(seed + ".png");
+  // save(seed + ".png");
 }
 
 function NY_FinishDrawMountain() {

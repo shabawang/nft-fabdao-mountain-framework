@@ -110,21 +110,21 @@ function drawMount() {
     ghMain.endShape();
 
     if(i==0){
-      ghMain.noFill();
-      ghMain.stroke(255,0,0);
-      ghMain.strokeWeight(10);
-      ghMain.beginShape();
-      ghMain.vertex(0, defultH);
+      // ghMain.noFill();
+      // ghMain.stroke(255,0,0);
+      // ghMain.strokeWeight(10);
+      // ghMain.beginShape();
+      // ghMain.vertex(0, defultH);
       for (let j = 0; j < defultW; j += 4) {
         n = noise(i, j / 300) * 300;
         k = fbm2D(i, j / 100) * 30;
         y = defultH * hscal * i + n + k+shiftH;
         if(j==40) console.log("start:",int(y)),startMountainY=int(y);
         else if(j==1040) console.log("end:",int(y)),endMountainY=int(y);
-        ghMain.vertex(j, y);
+        // ghMain.vertex(j, y);
       }
-      ghMain.vertex(defultW , defultH);
-      ghMain.endShape();
+      // ghMain.vertex(defultW , defultH);
+      // ghMain.endShape();
     }
 
     let lineCount = R.random_choice([2,4]);
